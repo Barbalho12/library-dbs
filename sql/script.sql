@@ -7,15 +7,25 @@ CREATE DATABASE biblioteca
     CONNECTION LIMIT = 100;
 
 -- DROP TABLES (TESTS)
-
-DROP TABLE IF EXISTS Cliente;
-DROP TABLE IF EXISTS Credencial;
 DROP TABLE IF EXISTS Endereco;
+DROP TABLE IF EXISTS Credencial;
+DROP TABLE IF EXISTS Cliente;
 DROP TABLE IF EXISTS Funcionario;
 DROP TABLE IF EXISTS Autor;
 DROP TABLE IF EXISTS Editora;
 DROP TABLE IF EXISTS Livro;
+DROP TABLE IF EXISTS Biblioteca;
+DROP TABLE IF EXISTS Localizacao;
 DROP TABLE IF EXISTS Exemplar;
+DROP TABLE IF EXISTS Operacao;
+DROP TABLE IF EXISTS Devolucao;
+DROP TABLE IF EXISTS Renovacao;
+DROP TABLE IF EXISTS Emprestimo;
+DROP TABLE IF EXISTS Reserva;
+DROP TABLE IF EXISTS Multa;
+DROP TABLE IF EXISTS Requisicao;
+DROP TABLE IF EXISTS Notificacao;
+ 
 
 -- CREATE TABLES 
 
@@ -124,8 +134,86 @@ CREATE TABLE IF NOT EXISTS Exemplar(
     FOREIGN KEY (idLocalizacao) REFERENCES Localizacao (idLocalizacao)
 );
 
+CREATE TABLE IF NOT EXISTS Operacao(
+    idOperacao SERIAL,
+    idExemplar INTEGER,
+    idFuncionario INTEGER,
+    PRIMARY KEY( Operacao ),
+    FOREIGN KEY (idExemplar) REFERENCES Exemplar (idExemplar),
+    FOREIGN KEY (idFuncionario) REFERENCES Funcionario (idFuncionario)
+);
+
+CREATE TABLE IF NOT EXISTS Devolucao(
+    idDevolucao SERIAL,
+    idOperacao INTEGER,
+    idExemplar INTEGER,
+    idCliente INTEGER,
+    data_devolucao date,
+    PRIMARY KEY( idDevolucao ),
+    FOREIGN KEY (idOperacao) REFERENCES Operacao (idOperacao),
+    FOREIGN KEY (idExemplar) REFERENCES Exemplar (idExemplar),
+    FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente)
+);
+
+CREATE TABLE IF NOT EXISTS Renovacao(
+    idRenovacao SERIAL,
+    idEmprestimo INTEGER,
+    idCliente INTEGER,
+    data_renovacao date,
+    PRIMARY KEY( idRenovacao ),
+    FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente),
+    FOREIGN KEY (idEmprestimo) REFERENCES Emprestimo (idEmprestimo)
+);
+
+CREATE TABLE IF NOT EXISTS Emprestimo(
+    idEmprestimo SERIAL,
+    idOperacao INTEGER,
+    idExemplar INTEGER,
+    idCliente INTEGER,
+    data_emprestimo date,
+    data_prev_entrega date,
+    status_emprestimo VARCHAR(10),
+    PRIMARY KEY( idEmprestimo ),
+    FOREIGN KEY (idOperacao) REFERENCES Operacao (idOperacao),
+    FOREIGN KEY (idExemplar) REFERENCES Exemplar (idExemplar),
+    FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente)
+);
+
+CREATE TABLE IF NOT EXISTS Reserva(
+    idReserva SERIAL,
+    idExemplar INTEGER,
+    idCliente INTEGER,
+    data_reserva date,
+    status_reserva VARCHAR(10),
+    PRIMARY KEY( idReserva ),
+    FOREIGN KEY (idExemplar) REFERENCES Exemplar (idExemplar),
+    FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente)
+);
+
+CREATE TABLE IF NOT EXISTS Multa(
+    idMulta SERIAL,
+    idCliente INTEGER,
+    categoria VARCHAR(10),
+    status_conclusao VARCHAR(10),
+    idEmprestimo INTEGER,
+    PRIMARY KEY( idMulta ),
+    FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente),
+    FOREIGN KEY (idEmprestimo) REFERENCES Emprestimo (idEmprestimo)
+);
+
+CREATE TABLE IF NOT EXISTS Requisicao(
+    idRequisicao SERIAL,
+    idCliente INTEGER,
+    livro VARCHAR(40),
+    PRIMARY KEY( idRequisicao ),
+    FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente)
+);
 
 
-
-
-
+CREATE TABLE IF NOT EXISTS Notificacao(
+    idNotificacao SERIAL,
+    idCliente INTEGER,
+    mensagem TEXT,
+    PRIMARY KEY( idNotificacao ),
+    FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente)
+);

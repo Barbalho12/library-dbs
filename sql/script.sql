@@ -7,24 +7,24 @@ CREATE DATABASE biblioteca
     CONNECTION LIMIT = 100;
 
 -- DROP TABLES (TESTS)
-DROP TABLE IF EXISTS Endereco;
-DROP TABLE IF EXISTS Credencial;
-DROP TABLE IF EXISTS Cliente;
-DROP TABLE IF EXISTS Funcionario;
-DROP TABLE IF EXISTS Autor;
-DROP TABLE IF EXISTS Editora;
-DROP TABLE IF EXISTS Livro;
-DROP TABLE IF EXISTS Biblioteca;
-DROP TABLE IF EXISTS Localizacao;
-DROP TABLE IF EXISTS Exemplar;
-DROP TABLE IF EXISTS Operacao;
+DROP TABLE IF EXISTS Requisicao;
 DROP TABLE IF EXISTS Devolucao;
 DROP TABLE IF EXISTS Renovacao;
-DROP TABLE IF EXISTS Emprestimo;
 DROP TABLE IF EXISTS Reserva;
 DROP TABLE IF EXISTS Multa;
-DROP TABLE IF EXISTS Requisicao;
+DROP TABLE IF EXISTS Emprestimo;
+DROP TABLE IF EXISTS Operacao;
+DROP TABLE IF EXISTS Exemplar;
 DROP TABLE IF EXISTS Notificacao;
+DROP TABLE IF EXISTS Cliente;
+DROP TABLE IF EXISTS Funcionario;
+DROP TABLE IF EXISTS Endereco;
+DROP TABLE IF EXISTS Credencial;
+DROP TABLE IF EXISTS Livro;
+DROP TABLE IF EXISTS Autor;
+DROP TABLE IF EXISTS Editora;
+DROP TABLE IF EXISTS Localizacao;
+DROP TABLE IF EXISTS Biblioteca;
  
 
 -- CREATE TABLES 
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS Endereco(
 );
 
 CREATE TABLE IF NOT EXISTS Credencial(
-	idCredencial SERIAL,
+    idCredencial SERIAL,
     username VARCHAR(40),
     senha NUMERIC(11),
     token_user TEXT,
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS Credencial(
 );
 
 CREATE TABLE IF NOT EXISTS Cliente(
-	idCliente SERIAL,
+    idCliente SERIAL,
     nome VARCHAR(40),
     cpf NUMERIC(11),
     telefone NUMERIC(13),
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS Cliente(
 );
 
 CREATE TABLE IF NOT EXISTS Funcionario(
-	idFuncionario SERIAL,
+    idFuncionario SERIAL,
     nome VARCHAR(40),
     cpf NUMERIC(11),
     idCredencial INTEGER,
@@ -75,13 +75,13 @@ CREATE TABLE IF NOT EXISTS Funcionario(
 
 -- Entidades de Livro
 CREATE TABLE IF NOT EXISTS Autor(
-	idAutor SERIAL,
+    idAutor SERIAL,
     nome VARCHAR(40),
     PRIMARY KEY( idAutor )
 );
 
 CREATE TABLE IF NOT EXISTS Editora(
-	idEditora SERIAL,
+    idEditora SERIAL,
     nome VARCHAR(40),
     telefone NUMERIC(13),
     email VARCHAR(40),
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS Editora(
 );
 
 CREATE TABLE IF NOT EXISTS Livro(
-	idLivro SERIAL,
+    idLivro SERIAL,
     titulo VARCHAR(80),
     isbn VARCHAR(40),
     edicao INT,
@@ -105,14 +105,14 @@ CREATE TABLE IF NOT EXISTS Livro(
 
 -- Entidades de Exemplar
 CREATE TABLE IF NOT EXISTS Biblioteca(
-	idBiblioteca SERIAL,
+    idBiblioteca SERIAL,
     nome VARCHAR(80),
     descricao_endereco TEXT,
     PRIMARY KEY( idBiblioteca )
 );
 
 CREATE TABLE IF NOT EXISTS Localizacao(
-	idLocalizacao SERIAL,
+    idLocalizacao SERIAL,
     andar INTEGER,
     sala VARCHAR(10),
     estante VARCHAR(10),
@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS Localizacao(
 );
 
 CREATE TABLE IF NOT EXISTS Exemplar(
-	idExemplar SERIAL,
+    idExemplar SERIAL,
     preco FLOAT,
     codigo_barras VARCHAR(40),
     data_compra DATE,
@@ -134,25 +134,32 @@ CREATE TABLE IF NOT EXISTS Exemplar(
     FOREIGN KEY (idLocalizacao) REFERENCES Localizacao (idLocalizacao)
 );
 
-CREATE TABLE IF NOT EXISTS Operacao(
-    idOperacao SERIAL,
-    idExemplar INTEGER,
-    idFuncionario INTEGER,
-    PRIMARY KEY( Operacao ),
-    FOREIGN KEY (idExemplar) REFERENCES Exemplar (idExemplar),
-    FOREIGN KEY (idFuncionario) REFERENCES Funcionario (idFuncionario)
-);
-
 CREATE TABLE IF NOT EXISTS Devolucao(
     idDevolucao SERIAL,
     idOperacao INTEGER,
     idExemplar INTEGER,
     idCliente INTEGER,
+    idFuncionario INTEGER,
     data_devolucao date,
     PRIMARY KEY( idDevolucao ),
-    FOREIGN KEY (idOperacao) REFERENCES Operacao (idOperacao),
     FOREIGN KEY (idExemplar) REFERENCES Exemplar (idExemplar),
-    FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente)
+    FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente),
+    FOREIGN KEY (idFuncionario) REFERENCES Funcionario (idFuncionario)
+);
+
+CREATE TABLE IF NOT EXISTS Emprestimo(
+    idEmprestimo SERIAL,
+    idOperacao INTEGER,
+    idExemplar INTEGER,
+    idCliente INTEGER,
+    idFuncionario INTEGER,
+    data_emprestimo date,
+    data_prev_entrega date,
+    status_emprestimo VARCHAR(10),
+    PRIMARY KEY( idEmprestimo ),
+    FOREIGN KEY (idExemplar) REFERENCES Exemplar (idExemplar),
+    FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente),
+    FOREIGN KEY (idFuncionario) REFERENCES Funcionario (idFuncionario)
 );
 
 CREATE TABLE IF NOT EXISTS Renovacao(
@@ -163,20 +170,6 @@ CREATE TABLE IF NOT EXISTS Renovacao(
     PRIMARY KEY( idRenovacao ),
     FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente),
     FOREIGN KEY (idEmprestimo) REFERENCES Emprestimo (idEmprestimo)
-);
-
-CREATE TABLE IF NOT EXISTS Emprestimo(
-    idEmprestimo SERIAL,
-    idOperacao INTEGER,
-    idExemplar INTEGER,
-    idCliente INTEGER,
-    data_emprestimo date,
-    data_prev_entrega date,
-    status_emprestimo VARCHAR(10),
-    PRIMARY KEY( idEmprestimo ),
-    FOREIGN KEY (idOperacao) REFERENCES Operacao (idOperacao),
-    FOREIGN KEY (idExemplar) REFERENCES Exemplar (idExemplar),
-    FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente)
 );
 
 CREATE TABLE IF NOT EXISTS Reserva(
@@ -206,14 +199,5 @@ CREATE TABLE IF NOT EXISTS Requisicao(
     idCliente INTEGER,
     livro VARCHAR(40),
     PRIMARY KEY( idRequisicao ),
-    FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente)
-);
-
-
-CREATE TABLE IF NOT EXISTS Notificacao(
-    idNotificacao SERIAL,
-    idCliente INTEGER,
-    mensagem TEXT,
-    PRIMARY KEY( idNotificacao ),
     FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente)
 );

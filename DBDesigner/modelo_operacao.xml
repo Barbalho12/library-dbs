@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="yes" ?>
 <DBMODEL Version="4.0">
 <SETTINGS>
-<GLOBALSETTINGS ModelName="modelo" IDModel="0" IDVersion="0" VersionStr="1.0.0.0" Comments="" UseVersionHistroy="1" AutoIncVersion="1" DatabaseType="MySQL" ZoomFac="68.63" XPos="45" YPos="0" DefaultDataType="5" DefaultTablePrefix="0" DefSaveDBConn="" DefSyncDBConn="" DefQueryDBConn="" Printer="" HPageCount="4.0" PageAspectRatio="1.440892512336408" PageOrientation="1" PageFormat="A4 (210x297 mm, 8.26x11.7 inches)" SelectedPages="" UsePositionGrid="0" PositionGridX="20" PositionGridY="20" TableNameInRefs="1" DefaultTableType="0" ActivateRefDefForNewRelations="1" FKPrefix="" FKPostfix="" CreateFKRefDefIndex="1" DBQuoteCharacter="`" CreateSQLforLinkedObjects="0" DefModelFont="Tahoma" CanvasWidth="4096" CanvasHeight="2842" />
+<GLOBALSETTINGS ModelName="modelo" IDModel="0" IDVersion="0" VersionStr="1.0.0.0" Comments="" UseVersionHistroy="1" AutoIncVersion="1" DatabaseType="MySQL" ZoomFac="68.63" XPos="45" YPos="48" DefaultDataType="5" DefaultTablePrefix="0" DefSaveDBConn="" DefSyncDBConn="" DefQueryDBConn="" Printer="" HPageCount="4.0" PageAspectRatio="1.440892512336408" PageOrientation="1" PageFormat="A4 (210x297 mm, 8.26x11.7 inches)" SelectedPages="" UsePositionGrid="0" PositionGridX="20" PositionGridY="20" TableNameInRefs="1" DefaultTableType="0" ActivateRefDefForNewRelations="1" FKPrefix="" FKPostfix="" CreateFKRefDefIndex="1" DBQuoteCharacter="`" CreateSQLforLinkedObjects="0" DefModelFont="Tahoma" CanvasWidth="4096" CanvasHeight="2842" />
 <DATATYPEGROUPS>
 <DATATYPEGROUP Name="Numeric Types" Icon="1" />
 <DATATYPEGROUP Name="Date and Time Types" Icon="2" />
@@ -378,12 +378,6 @@
 <OPTIONSELECT Value="0" />
 </OPTIONSELECTED>
 </COLUMN>
-<COLUMN ID="1534" ColName="Exemplar_idExemplar" PrevColName="" Pos="1" idDatatype="5" DatatypeParams="" Width="-1" Prec="-1" PrimaryKey="0" NotNull="1" AutoInc="0" IsForeignKey="1" DefaultValue="" Comments="">
-<OPTIONSELECTED>
-<OPTIONSELECT Value="1" />
-<OPTIONSELECT Value="0" />
-</OPTIONSELECTED>
-</COLUMN>
 <COLUMN ID="1567" ColName="data_emprestimo" PrevColName="" Pos="4" idDatatype="14" DatatypeParams="" Width="-1" Prec="-1" PrimaryKey="0" NotNull="0" AutoInc="0" IsForeignKey="0" DefaultValue="" Comments="">
 <OPTIONSELECTED>
 </OPTIONSELECTED>
@@ -401,7 +395,6 @@
 <RELATION_START ID="1512" />
 </RELATIONS_START>
 <RELATIONS_END>
-<RELATION_END ID="1533" />
 <RELATION_END ID="1591" />
 <RELATION_END ID="1663" />
 </RELATIONS_END>
@@ -409,11 +402,6 @@
 <INDEX ID="1439" IndexName="PRIMARY" IndexKind="0" FKRefDef_Obj_id="-1">
 <INDEXCOLUMNS>
 <INDEXCOLUMN idColumn="1438" LengthParam="0" />
-</INDEXCOLUMNS>
-</INDEX>
-<INDEX ID="1535" IndexName="Emprestimo_FKIndex3" IndexKind="1" FKRefDef_Obj_id="1533">
-<INDEXCOLUMNS>
-<INDEXCOLUMN idColumn="1534" LengthParam="0" />
 </INDEXCOLUMNS>
 </INDEX>
 <INDEX ID="1593" IndexName="Emprestimo_FKIndex3" IndexKind="1" FKRefDef_Obj_id="1591">
@@ -521,7 +509,6 @@
 </COLUMNS>
 <RELATIONS_START>
 <RELATION_START ID="1515" />
-<RELATION_START ID="1533" />
 <RELATION_START ID="1669" />
 </RELATIONS_START>
 <RELATIONS_END>
@@ -1079,8 +1066,7 @@
 <RELATION ID="1509" RelationName="possui" Kind="5" SrcTable="1402" DestTable="1390" FKFields="idEditora=Editora_idEditora\n" FKFieldsComments="\n" relDirection="4" MidOffset="-3" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="-25" CaptionOffsetY="-3" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="1511" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="24" />
 <RELATION ID="1512" RelationName="de um" Kind="5" SrcTable="1394" DestTable="1412" FKFields="idEmprestimo=Emprestimo_idEmprestimo\n" FKFieldsComments="\n" relDirection="3" MidOffset="1" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="-33" CaptionOffsetY="-23" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="1514" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="25" />
 <RELATION ID="1515" RelationName="de" Kind="5" SrcTable="1398" DestTable="1396" FKFields="idExemplar=Exemplar_idExemplar\n" FKFieldsComments="\n" relDirection="4" MidOffset="-15" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="-27" CaptionOffsetY="-22" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="1517" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="26" />
-<RELATION ID="1533" RelationName="de" Kind="5" SrcTable="1398" DestTable="1394" FKFields="idExemplar=Exemplar_idExemplar\n" FKFieldsComments="\n" relDirection="4" MidOffset="6" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="-23" CaptionOffsetY="-20" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="1535" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="32" />
-<RELATION ID="1542" RelationName="distingue" Kind="2" SrcTable="1390" DestTable="1398" FKFields="idLivro=Livro_idLivro\n" FKFieldsComments="\n" relDirection="1" MidOffset="0" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="-41" CaptionOffsetY="-21" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="1544" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="33" />
+<RELATION ID="1542" RelationName="distingue" Kind="2" SrcTable="1390" DestTable="1398" FKFields="idLivro=Livro_idLivro\n" FKFieldsComments="\n" relDirection="1" MidOffset="0" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="-18" CaptionOffsetY="5" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="1544" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="33" />
 <RELATION ID="1588" RelationName="Faz" Kind="2" SrcTable="1583" DestTable="1406" FKFields="idCliente=Cliente_idCliente\n" FKFieldsComments="\n" relDirection="2" MidOffset="26" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="0" CaptionOffsetY="-1" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="1590" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="27" />
 <RELATION ID="1591" RelationName="Faz" Kind="2" SrcTable="1583" DestTable="1394" FKFields="idCliente=Cliente_idCliente\n" FKFieldsComments="\n" relDirection="2" MidOffset="50" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="0" CaptionOffsetY="1" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="1593" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="28" />
 <RELATION ID="1594" RelationName="Faz" Kind="2" SrcTable="1583" DestTable="1412" FKFields="idCliente=Cliente_idCliente\n" FKFieldsComments="\n" relDirection="2" MidOffset="51" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="-2" CaptionOffsetY="-4" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="1596" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="29" />
@@ -1093,7 +1079,7 @@
 <RELATION ID="1660" RelationName="permite" Kind="5" SrcTable="1655" DestTable="1406" FKFields="idOpera\231\227o=Opera\231\227o_idOpera\231\227o\n" FKFieldsComments="\n" relDirection="4" MidOffset="3" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="-35" CaptionOffsetY="-20" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="1662" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="36" />
 <RELATION ID="1663" RelationName="permite" Kind="5" SrcTable="1655" DestTable="1394" FKFields="idOpera\231\227o=Opera\231\227o_idOpera\231\227o\n" FKFieldsComments="\n" relDirection="4" MidOffset="1" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="-32" CaptionOffsetY="-23" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="1665" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="37" />
 <RELATION ID="1666" RelationName="valida" Kind="2" SrcTable="1408" DestTable="1655" FKFields="idFuncion\225rio=Funcion\225rio_idFuncion\225rio\n" FKFieldsComments="\n" relDirection="3" MidOffset="0" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="-31" CaptionOffsetY="-24" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="1668" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="38" />
-<RELATION ID="1669" RelationName="envolve" Kind="5" SrcTable="1398" DestTable="1655" FKFields="idExemplar=Exemplar_idExemplar\n" FKFieldsComments="\n" relDirection="1" MidOffset="1" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="16" CaptionOffsetY="-1" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="1671" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="39" />
+<RELATION ID="1669" RelationName="envolve" Kind="5" SrcTable="1398" DestTable="1655" FKFields="idExemplar=Exemplar_idExemplar\n" FKFieldsComments="\n" relDirection="1" MidOffset="1" OptionalStart="0" OptionalEnd="0" CaptionOffsetX="3" CaptionOffsetY="-1" StartIntervalOffsetX="0" StartIntervalOffsetY="0" EndIntervalOffsetX="0" EndIntervalOffsetY="0" CreateRefDef="1" Invisible="0" RefDef="Matching=0\nOnDelete=3\nOnUpdate=3\n" Comments="" FKRefDefIndex_Obj_id="1671" Splitted="0" IsLinkedObject="0" IDLinkedModel="-1" Obj_id_Linked="-1" OrderPos="39" />
 </RELATIONS>
 <NOTES>
 </NOTES>

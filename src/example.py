@@ -15,6 +15,8 @@ os.system("curl -X POST \"http://apitestes.info.ufrn.br/authz-server/oauth/token
 
 data = readFileJson('cred.txt')
 access_token = data["access_token"]
+
+os.system("rm cred.txt")
 # print access_token
 
 # Consult libraries

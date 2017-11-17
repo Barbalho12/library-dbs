@@ -36,11 +36,25 @@ print(data[0]["id-biblioteca"])
 print "--------------"
 # Consult libraries
 os.system("curl -X GET \"https://apitestes.info.ufrn.br/biblioteca/v0.1/exemplares\" -H \"Authorization: Bearer "+access_token+"\" -H \"x-api-key: mIWP49N4BfuLbVrToQerm3dWKNjUQzqYcXi8q1ND\" > exemplares.txt")
-
-
 data = readFileJson('exemplares.txt')
 print "--------------"
 for exemplar in data:
 	print exemplar["titulo"]
 	print exemplar["autor"]
 	print "--------------"
+
+
+os.system("curl -X GET \"https://apitestes.info.ufrn.br/biblioteca/v0.1/acervos\" -H \"Authorization: Bearer "+access_token+"\" -H \"x-api-key: mIWP49N4BfuLbVrToQerm3dWKNjUQzqYcXi8q1ND\" > acervos.txt")
+data = readFileJson('acervos.txt')
+print "--------------"
+for acervo in data:
+	print acervo["titulo"]
+	print acervo["autor"]
+
+	for topico in acervo["assunto"]:
+		print "\t"+topico
+	print "--------------"
+
+
+# os.system("curl -X GET \"https://apitestes.info.ufrn.br/biblioteca/v0.1/sitacoes-materiais\" -H \"Authorization: Bearer "+access_token+"\" -H \"x-api-key: mIWP49N4BfuLbVrToQerm3dWKNjUQzqYcXi8q1ND\" > sitacoes-materiais.txt")
+

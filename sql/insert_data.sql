@@ -44,72 +44,26 @@ INSERT INTO Exemplar (preco, codigo_barras, data_compra, estado_fisico, idLivro,
             (40.0, '11111112', '10/05/2015', 'BOM', 1, 2),
             (20.0, '22222222', '10/05/2003', 'DANIFICADO', 2, 1);
 
+INSERT INTO Emprestimo (idExemplar, idCliente, idFuncionario, data_emprestimo, data_prev_entrega, status_emprestimo)
+    VALUES  (1, 1, 1, '05/07/2017', '20/07/2017', 'FINALIZADO'),
+            (1, 1, 1, '15/08/2017', '30/08/2017', 'ATRASADO'),
+            (2, 2, 1, '10/11/2017', '25/11/2017', 'EMPRESTADO'),
+            (3, 2, 1, '01/10/2017', '30/11/2017', 'RENOVADO');
+
+INSERT INTO Devolucao (idExemplar, idCliente, idFuncionario, data_devolucao)
+    VALUES  (1, 1, 1, '20/07/2017');
+
+INSERT INTO Renovacao (idEmprestimo, idCliente, data_renovacao)
+    VALUES  (4, 2, '15/11/2017');
+
+INSERT INTO Reserva (idLivro, idCliente, data_reserva, status_reserva)
+    VALUES  (2, 2, '08/11/2017', 'FINALIZADA'),
+            (2, 1, '16/11/2017', 'ATIVA');
+
+INSERT INTO Multa (idCliente, categoria, status_conclusao, idEmprestimo)
+    VALUES  (1, 'ATRASO', 'NAO_INICIADA', 2);
+
+INSERT INTO Requisicao (idCliente, livro)
+    VALUES  (1, 'Mitologia Nórdica - Neil Gaiman');
 
 
--- CREATE TABLE IF NOT EXISTS Devolucao(
---     idDevolucao SERIAL,
---     idOperacao INTEGER,
---     idExemplar INTEGER,
---     idCliente INTEGER,
---     idFuncionario INTEGER,
---     data_devolucao date,
---     PRIMARY KEY( idDevolucao ),
---     FOREIGN KEY (idExemplar) REFERENCES Exemplar (idExemplar),
---     FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente),
---     FOREIGN KEY (idFuncionario) REFERENCES Funcionario (idFuncionario)
--- );
-
--- CREATE TABLE IF NOT EXISTS Emprestimo(
---     idEmprestimo SERIAL,
---     idOperacao INTEGER,
---     idExemplar INTEGER,
---     idCliente INTEGER,
---     idFuncionario INTEGER,
---     data_emprestimo date,
---     data_prev_entrega date,
---     status_emprestimo VARCHAR(10),
---     PRIMARY KEY( idEmprestimo ),
---     FOREIGN KEY (idExemplar) REFERENCES Exemplar (idExemplar),
---     FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente),
---     FOREIGN KEY (idFuncionario) REFERENCES Funcionario (idFuncionario)
--- );
-
--- CREATE TABLE IF NOT EXISTS Renovacao(
---     idRenovacao SERIAL,
---     idEmprestimo INTEGER,
---     idCliente INTEGER,
---     data_renovacao date,
---     PRIMARY KEY( idRenovacao ),
---     FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente),
---     FOREIGN KEY (idEmprestimo) REFERENCES Emprestimo (idEmprestimo)
--- );
-
--- CREATE TABLE IF NOT EXISTS Reserva(
---     idReserva SERIAL,
---     idExemplar INTEGER,
---     idCliente INTEGER,
---     data_reserva date,
---     status_reserva VARCHAR(10),
---     PRIMARY KEY( idReserva ),
---     FOREIGN KEY (idExemplar) REFERENCES Exemplar (idExemplar),
---     FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente)
--- );
-
--- CREATE TABLE IF NOT EXISTS Multa(
---     idMulta SERIAL,
---     idCliente INTEGER,
---     categoria VARCHAR(10),
---     status_conclusao VARCHAR(10),
---     idEmprestimo INTEGER,
---     PRIMARY KEY( idMulta ),
---     FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente),
---     FOREIGN KEY (idEmprestimo) REFERENCES Emprestimo (idEmprestimo)
--- );
-
--- CREATE TABLE IF NOT EXISTS Requisicao(
---     idRequisicao SERIAL,
---     idCliente INTEGER,
---     livro VARCHAR(40),
---     PRIMARY KEY( idRequisicao ),
---     FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente)
--- );

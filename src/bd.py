@@ -21,7 +21,7 @@ def delete_database():
 	con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
 	cursor.execute( "drop database biblioteca" )
 
-# delete_database()
+delete_database()
 # exit()
 
 #Ler um arquivo e retorna uma string

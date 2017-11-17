@@ -84,8 +84,8 @@ CREATE TABLE IF NOT EXISTS Biblioteca(
 CREATE TABLE IF NOT EXISTS Localizacao(
     idLocalizacao SERIAL,
     andar INTEGER,
-    sala VARCHAR(10),
-    estante VARCHAR(10),
+    sala VARCHAR(15),
+    estante VARCHAR(15),
     idBiblioteca INTEGER,
     PRIMARY KEY( idLocalizacao ),
     FOREIGN KEY (idBiblioteca) REFERENCES Biblioteca (idBiblioteca)
@@ -106,7 +106,6 @@ CREATE TABLE IF NOT EXISTS Exemplar(
 
 CREATE TABLE IF NOT EXISTS Devolucao(
     idDevolucao SERIAL,
-    idOperacao INTEGER,
     idExemplar INTEGER,
     idCliente INTEGER,
     idFuncionario INTEGER,
@@ -119,13 +118,13 @@ CREATE TABLE IF NOT EXISTS Devolucao(
 
 CREATE TABLE IF NOT EXISTS Emprestimo(
     idEmprestimo SERIAL,
-    idOperacao INTEGER,
+
     idExemplar INTEGER,
     idCliente INTEGER,
     idFuncionario INTEGER,
     data_emprestimo date,
     data_prev_entrega date,
-    status_emprestimo VARCHAR(10),
+    status_emprestimo VARCHAR(15),
     PRIMARY KEY( idEmprestimo ),
     FOREIGN KEY (idExemplar) REFERENCES Exemplar (idExemplar),
     FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente),
@@ -144,20 +143,20 @@ CREATE TABLE IF NOT EXISTS Renovacao(
 
 CREATE TABLE IF NOT EXISTS Reserva(
     idReserva SERIAL,
-    idExemplar INTEGER,
+    idLivro INTEGER,
     idCliente INTEGER,
     data_reserva date,
-    status_reserva VARCHAR(10),
+    status_reserva VARCHAR(15),
     PRIMARY KEY( idReserva ),
-    FOREIGN KEY (idExemplar) REFERENCES Exemplar (idExemplar),
+    FOREIGN KEY (idLivro) REFERENCES Livro (idLivro),
     FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente)
 );
 
 CREATE TABLE IF NOT EXISTS Multa(
     idMulta SERIAL,
     idCliente INTEGER,
-    categoria VARCHAR(10),
-    status_conclusao VARCHAR(10),
+    categoria VARCHAR(15),
+    status_conclusao VARCHAR(15),
     idEmprestimo INTEGER,
     PRIMARY KEY( idMulta ),
     FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente),

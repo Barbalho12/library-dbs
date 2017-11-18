@@ -1,15 +1,22 @@
--- CREATE TABLES 
+-- CREATE DATABASE
+CREATE DATABASE biblioteca
+    WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = 100;
+
+-- CREATE TABLES
 
 -- Entidades de Usuário
 CREATE TABLE IF NOT EXISTS Endereco(
     idEndereco SERIAL,
     pais VARCHAR(20),
     uf VARCHAR(2),
+    cidade VARCHAR(30),
     cep NUMERIC(8),
     bairro VARCHAR(40),
     rua VARCHAR(80),
-    numero INTEGER,
-    complemento TEXT,
     PRIMARY KEY( idEndereco )
 );
 
@@ -118,7 +125,6 @@ CREATE TABLE IF NOT EXISTS Devolucao(
 
 CREATE TABLE IF NOT EXISTS Emprestimo(
     idEmprestimo SERIAL,
-
     idExemplar INTEGER,
     idCliente INTEGER,
     idFuncionario INTEGER,

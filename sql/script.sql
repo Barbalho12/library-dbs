@@ -1,6 +1,6 @@
--- CREATE DATABASE 
+-- CREATE DATABASE
 CREATE DATABASE biblioteca
-    WITH 
+    WITH
     OWNER = postgres
     ENCODING = 'UTF8'
     TABLESPACE = pg_default
@@ -25,7 +25,6 @@ DROP TABLE IF EXISTS Autor;
 DROP TABLE IF EXISTS Editora;
 DROP TABLE IF EXISTS Localizacao;
 DROP TABLE IF EXISTS Biblioteca;
- 
 
 -- CREATE TABLES 
 

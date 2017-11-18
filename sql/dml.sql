@@ -100,5 +100,5 @@ INSERT INTO Requisicao (idCliente, livro)
             (4, 'Harry Potter e o Prisioneiro de Azkaban - J.K. Rowling'),
             (5,         'Harry Potter e o Cálice de Fogo - J.K. Rowling'),
             (6,         'Harry Potter e a Ordem da Fenix - J.K. Rowling'),
-            (7,       'Harry Potter e o Príncipe Mestiço - J.K. Rowling'),
-            (8,    'Harry Potter e as Relíquias da Morte - J.K. Rowling');
+            (6,       'Harry Potter e o Príncipe Mestiço - J.K. Rowling'),
+            (6,    'Harry Potter e as Relíquias da Morte - J.K. Rowling');

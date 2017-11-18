@@ -9,9 +9,9 @@ password_default ='postgres'
 
 dbname_biblioteca = 'biblioteca'
 
-file_creation_db = '../sql/create_db.sql'
-file_create_tables = '../sql/create_tables.sql'
-file_insert_data = '../sql/insert_data.sql'
+file_creation_db = '../sql/ddl_create_database.sql'
+file_create_tables = '../sql/ddl_create_tables.sql'
+file_insert_data = '../sql/dml.sql'
 
 
 ## DELETA A BASE DADOS

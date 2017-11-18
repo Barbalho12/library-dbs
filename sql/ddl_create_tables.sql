@@ -1,52 +1,22 @@
--- CREATE DATABASE
-CREATE DATABASE biblioteca
-    WITH
-    OWNER = postgres
-    ENCODING = 'UTF8'
-    TABLESPACE = pg_default
-    CONNECTION LIMIT = 100;
-
--- DROP TABLES (TESTS)
-DROP TABLE IF EXISTS Requisicao;
-DROP TABLE IF EXISTS Devolucao;
-DROP TABLE IF EXISTS Renovacao;
-DROP TABLE IF EXISTS Reserva;
-DROP TABLE IF EXISTS Multa;
-DROP TABLE IF EXISTS Emprestimo;
-DROP TABLE IF EXISTS Operacao;
-DROP TABLE IF EXISTS Exemplar;
-DROP TABLE IF EXISTS Notificacao;
-DROP TABLE IF EXISTS Cliente;
-DROP TABLE IF EXISTS Funcionario;
-DROP TABLE IF EXISTS Endereco;
-DROP TABLE IF EXISTS Credencial;
-DROP TABLE IF EXISTS Livro;
-DROP TABLE IF EXISTS Autor;
-DROP TABLE IF EXISTS Editora;
-DROP TABLE IF EXISTS Localizacao;
-DROP TABLE IF EXISTS Biblioteca;
-
--- CREATE TABLES 
+-- CREATE TABLES
 
 -- Entidades de Usuário
 CREATE TABLE IF NOT EXISTS Endereco(
     idEndereco SERIAL,
     pais VARCHAR(20),
     uf VARCHAR(2),
+    cidade VARCHAR(30),
     cep NUMERIC(8),
     bairro VARCHAR(40),
     rua VARCHAR(80),
-    numero INTEGER,
-    complemento TEXT,
     PRIMARY KEY( idEndereco )
 );
 
 CREATE TABLE IF NOT EXISTS Credencial(
     idCredencial SERIAL,
     username VARCHAR(40),
-    senha NUMERIC(11),
+    senha VARCHAR(18),
     token_user TEXT,
-    idCliente INTEGER,
     PRIMARY KEY( idCredencial )
 );
 
@@ -92,8 +62,8 @@ CREATE TABLE IF NOT EXISTS Livro(
     titulo VARCHAR(80),
     isbn VARCHAR(40),
     edicao INT,
-    data_publicacao DATE,
-    categoria TEXT,
+    ano_publicacao INT,
+    linguagem TEXT,
     descricao TEXT,
     idAutor INTEGER,
     idEditora INTEGER,
@@ -113,8 +83,8 @@ CREATE TABLE IF NOT EXISTS Biblioteca(
 CREATE TABLE IF NOT EXISTS Localizacao(
     idLocalizacao SERIAL,
     andar INTEGER,
-    sala VARCHAR(10),
-    estante VARCHAR(10),
+    sala VARCHAR(15),
+    estante VARCHAR(15),
     idBiblioteca INTEGER,
     PRIMARY KEY( idLocalizacao ),
     FOREIGN KEY (idBiblioteca) REFERENCES Biblioteca (idBiblioteca)
@@ -135,7 +105,6 @@ CREATE TABLE IF NOT EXISTS Exemplar(
 
 CREATE TABLE IF NOT EXISTS Devolucao(
     idDevolucao SERIAL,
-    idOperacao INTEGER,
     idExemplar INTEGER,
     idCliente INTEGER,
     idFuncionario INTEGER,
@@ -148,13 +117,12 @@ CREATE TABLE IF NOT EXISTS Devolucao(
 
 CREATE TABLE IF NOT EXISTS Emprestimo(
     idEmprestimo SERIAL,
-    idOperacao INTEGER,
     idExemplar INTEGER,
     idCliente INTEGER,
     idFuncionario INTEGER,
     data_emprestimo date,
     data_prev_entrega date,
-    status_emprestimo VARCHAR(10),
+    status_emprestimo VARCHAR(15),
     PRIMARY KEY( idEmprestimo ),
     FOREIGN KEY (idExemplar) REFERENCES Exemplar (idExemplar),
     FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente),
@@ -173,20 +141,20 @@ CREATE TABLE IF NOT EXISTS Renovacao(
 
 CREATE TABLE IF NOT EXISTS Reserva(
     idReserva SERIAL,
-    idExemplar INTEGER,
+    idLivro INTEGER,
     idCliente INTEGER,
     data_reserva date,
-    status_reserva VARCHAR(10),
+    status_reserva VARCHAR(15),
     PRIMARY KEY( idReserva ),
-    FOREIGN KEY (idExemplar) REFERENCES Exemplar (idExemplar),
+    FOREIGN KEY (idLivro) REFERENCES Livro (idLivro),
     FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente)
 );
 
 CREATE TABLE IF NOT EXISTS Multa(
     idMulta SERIAL,
     idCliente INTEGER,
-    categoria VARCHAR(10),
-    status_conclusao VARCHAR(10),
+    categoria VARCHAR(15),
+    status_conclusao VARCHAR(15),
     idEmprestimo INTEGER,
     PRIMARY KEY( idMulta ),
     FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente),
@@ -196,7 +164,7 @@ CREATE TABLE IF NOT EXISTS Multa(
 CREATE TABLE IF NOT EXISTS Requisicao(
     idRequisicao SERIAL,
     idCliente INTEGER,
-    livro VARCHAR(40),
+    livro VARCHAR(100),
     PRIMARY KEY( idRequisicao ),
     FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente)
 );

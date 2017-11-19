@@ -223,7 +223,7 @@ CREATE VIEW livro_com_autor AS
     FROM Livro liv, Autor aut, Autor_Livro al
     WHERE liv.idLivro = al.idLivro and
           aut.idAutor = al.idAutor
-    GROUP  BY 1;
+    GROUP BY 1;
 
 
 ------------------------------------------

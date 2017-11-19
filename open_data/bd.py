@@ -27,10 +27,13 @@ def readFileJson(file):
 
 ## DELETA A BASE DADOS
 def delete_database():
-	con = psycopg2.connect(dbname='postgres', user='postgres', host='localhost', password='postgres')
-	cursor = con.cursor()
-	con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-	cursor.execute( "drop database biblioteca" )
+	try:
+		con = psycopg2.connect(dbname='postgres', user='postgres', host='localhost', password='postgres')
+		cursor = con.cursor()
+		con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+		cursor.execute( "drop database biblioteca" )
+	except:
+		pass
 
 delete_database()
 # exit()

@@ -29,8 +29,8 @@ CREATE TABLE IF NOT EXISTS Cliente(
     idEndereco INTEGER,
     idCredencial INTEGER,
     PRIMARY KEY( idCliente ),
-    FOREIGN KEY (idEndereco) REFERENCES Endereco (idEndereco) ON UPDATE NO ACTION ON DELETE NO ACTION,
-    FOREIGN KEY (idCredencial) REFERENCES Credencial (idCredencial) ON UPDATE NO ACTION ON DELETE NO ACTION
+    FOREIGN KEY (idEndereco) REFERENCES Endereco (idEndereco) ON UPDATE NO ACTION ON DELETE SET NULL,
+    FOREIGN KEY (idCredencial) REFERENCES Credencial (idCredencial) ON UPDATE NO ACTION ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS Funcionario(
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS Funcionario(
     cpf NUMERIC(11),
     idCredencial INTEGER,
     PRIMARY KEY( idFuncionario ),
-    FOREIGN KEY (idCredencial) REFERENCES Credencial (idCredencial) ON UPDATE NO ACTION ON DELETE NO ACTION
+    FOREIGN KEY (idCredencial) REFERENCES Credencial (idCredencial) ON UPDATE NO ACTION ON DELETE SET NULL
 );
 
 -- Entidades de Livro
@@ -68,8 +68,8 @@ CREATE TABLE IF NOT EXISTS Livro(
     idAutor INTEGER,
     idEditora INTEGER,
     PRIMARY KEY( idLivro ),
-    FOREIGN KEY (idAutor) REFERENCES Autor (idAutor) ON UPDATE NO ACTION ON DELETE NO ACTION,
-    FOREIGN KEY (idEditora) REFERENCES Editora (idEditora) ON UPDATE NO ACTION ON DELETE NO ACTION
+    FOREIGN KEY (idAutor) REFERENCES Autor (idAutor) ON UPDATE NO ACTION ON DELETE SET NULL,
+    FOREIGN KEY (idEditora) REFERENCES Editora (idEditora) ON UPDATE NO ACTION ON DELETE SET NULL
 );
 
 -- Entidades de Exemplar
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS Localizacao(
     estante VARCHAR(15),
     idBiblioteca INTEGER,
     PRIMARY KEY( idLocalizacao ),
-    FOREIGN KEY (idBiblioteca) REFERENCES Biblioteca (idBiblioteca) ON UPDATE NO ACTION ON DELETE NO ACTION
+    FOREIGN KEY (idBiblioteca) REFERENCES Biblioteca (idBiblioteca) ON UPDATE NO ACTION ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS Exemplar(
@@ -95,13 +95,13 @@ CREATE TABLE IF NOT EXISTS Exemplar(
     preco FLOAT,
     codigo_barras VARCHAR(40),
     data_compra DATE,
-    estado_fisico VARCHAR(20) CHECK (estado_fisico = 'DANIFICADO' or estado_fisico = 'BOM'),
+    estado_fisico VARCHAR(20) CHECK (estado_fisico = 'DANIFICADO' or estado_fisico = 'CONSERVADO'),
     idLivro INTEGER,
     idLocalizacao INTEGER,
     status VARCHAR(20) CHECK (status = 'DISPONIVEL' or status = 'INDISPONIVEL'),
     PRIMARY KEY( idExemplar ),
-    FOREIGN KEY (idLivro) REFERENCES Livro (idLivro) ON UPDATE NO ACTION ON DELETE NO ACTION,
-    FOREIGN KEY (idLocalizacao) REFERENCES Localizacao (idLocalizacao) ON UPDATE NO ACTION ON DELETE NO ACTION
+    FOREIGN KEY (idLivro) REFERENCES Livro (idLivro) ON UPDATE NO ACTION ON DELETE SET NULL,
+    FOREIGN KEY (idLocalizacao) REFERENCES Localizacao (idLocalizacao) ON UPDATE NO ACTION ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS Devolucao(
@@ -111,9 +111,9 @@ CREATE TABLE IF NOT EXISTS Devolucao(
     idFuncionario INTEGER,
     data_devolucao date,
     PRIMARY KEY( idDevolucao ),
-    FOREIGN KEY (idExemplar) REFERENCES Exemplar (idExemplar) ON UPDATE NO ACTION ON DELETE NO ACTION,
-    FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente) ON UPDATE NO ACTION ON DELETE NO ACTION,
-    FOREIGN KEY (idFuncionario) REFERENCES Funcionario (idFuncionario) ON UPDATE NO ACTION ON DELETE NO ACTION
+    FOREIGN KEY (idExemplar) REFERENCES Exemplar (idExemplar) ON UPDATE NO ACTION ON DELETE SET NULL,
+    FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente) ON UPDATE NO ACTION ON DELETE SET NULL,
+    FOREIGN KEY (idFuncionario) REFERENCES Funcionario (idFuncionario) ON UPDATE NO ACTION ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS Emprestimo(
@@ -125,8 +125,8 @@ CREATE TABLE IF NOT EXISTS Emprestimo(
     data_prev_entrega date,
     status_emprestimo VARCHAR(15) CHECK (status_emprestimo = 'FINALIZADO' or status_emprestimo = 'ATRASADO' or status_emprestimo = 'ATIVO' or status_emprestimo = 'RENOVADO'),
     PRIMARY KEY( idEmprestimo ),
-    FOREIGN KEY (idExemplar) REFERENCES Exemplar (idExemplar)  ON UPDATE NO ACTION ON DELETE NO ACTION,
-    FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente)     ON UPDATE NO ACTION ON DELETE NO ACTION,
+    FOREIGN KEY (idExemplar) REFERENCES Exemplar (idExemplar)  ON UPDATE NO ACTION ON DELETE SET NULL,
+    FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente)     ON UPDATE NO ACTION ON DELETE SET NULL,
     FOREIGN KEY (idFuncionario) REFERENCES Funcionario (idFuncionario)
 );
 
@@ -147,8 +147,8 @@ CREATE TABLE IF NOT EXISTS Reserva(
     data_reserva date,
     status_reserva VARCHAR(15) CHECK (status_reserva = 'ATIVA' or status_reserva = 'FINALIZADA'),
     PRIMARY KEY( idReserva ),
-    FOREIGN KEY (idLivro) REFERENCES Livro (idLivro) ON UPDATE NO ACTION ON DELETE NO ACTION,
-    FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente) ON UPDATE NO ACTION ON DELETE NO ACTION
+    FOREIGN KEY (idLivro) REFERENCES Livro (idLivro) ON UPDATE NO ACTION ON DELETE SET NULL,
+    FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente) ON UPDATE NO ACTION ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS Multa(
@@ -159,8 +159,8 @@ CREATE TABLE IF NOT EXISTS Multa(
     idEmprestimo INTEGER,
     date_conclusao DATE,
     PRIMARY KEY( idMulta ),
-    FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente) ON UPDATE NO ACTION ON DELETE NO ACTION,
-    FOREIGN KEY (idEmprestimo) REFERENCES Emprestimo (idEmprestimo) ON UPDATE NO ACTION ON DELETE NO ACTION
+    FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente) ON UPDATE NO ACTION ON DELETE SET NULL,
+    FOREIGN KEY (idEmprestimo) REFERENCES Emprestimo (idEmprestimo) ON UPDATE NO ACTION ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS Requisicao(
@@ -168,7 +168,7 @@ CREATE TABLE IF NOT EXISTS Requisicao(
     idCliente INTEGER,
     livro VARCHAR(100),
     PRIMARY KEY( idRequisicao ),
-    FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente) ON UPDATE NO ACTION ON DELETE NO ACTION
+    FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente) ON UPDATE NO ACTION ON DELETE SET NULL
 );
 
 
@@ -235,7 +235,7 @@ language plpgsql;
 
 -- Gatilho acionado quando um emprestimo é inserido
 CREATE TRIGGER trig_make_emprestimo_ativo
-     AFTER INSERT ON Emprestimo
+     BEFORE INSERT ON Emprestimo
      FOR EACH ROW
      EXECUTE PROCEDURE make_emprestimo_ativo();
 
@@ -271,7 +271,7 @@ language plpgsql;
 
 -- Gatilho acionado quando um emprestimo é inserido
 CREATE TRIGGER trig_make_devolucao
-     AFTER INSERT ON Devolucao
+     BEFORE INSERT ON Devolucao
      FOR EACH ROW
      EXECUTE PROCEDURE make_devolucao();
 
@@ -279,7 +279,7 @@ CREATE TRIGGER trig_make_devolucao
 
 
 -- Função que VERIFICA se é possível fazer emprestimo
-CREATE OR REPLACE FUNCTION make_emprestimo() RETURNS TRIGGER AS
+CREATE OR REPLACE FUNCTION make_emprestimo_restrict() RETURNS TRIGGER AS
 $BODY$
 DECLARE 
     var_r record;
@@ -302,10 +302,10 @@ $BODY$
 language plpgsql;
 
 -- Gatilho acionado quando um emprestimo é inserido
-CREATE TRIGGER trig_make_emprestimo
+CREATE TRIGGER trig_make_emprestimo_restrict
      AFTER INSERT ON Emprestimo
      FOR EACH ROW
-     EXECUTE PROCEDURE make_emprestimo();
+     EXECUTE PROCEDURE make_emprestimo_restrict();
 
 ------------------------------------------
 

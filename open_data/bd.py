@@ -118,28 +118,28 @@ print "Insert Data"
 
 # ----------
 
-print "----------- consultando clientes -----------"
+print "----------- Consultando clientes -----------"
 consulta("SELECT * FROM Cliente", cursor)
 
 # ----------
 
-print "----------- view situacao_livros -----------"
+print "----------- Consultando view situacao_livros -----------"
 consulta("SELECT * FROM situacao_livros", cursor)
 
 # ----------
 
-print "----------- view situacao_livros -----------"
+print "----------- Consultando view situacao_livros -----------"
 consulta("SELECT * FROM alerta_clientes", cursor)
 
 
-print "----------- view Emprestimo -----------"
+print "----------- Consultando Emprestimo -----------"
 consulta("SELECT * FROM emprestimo ORDER BY idEmprestimo", cursor)
 
 print "----------- view Reserva -----------"
 consulta("SELECT * FROM Reserva", cursor)
 
 
-print "----------- view Renovar Emprestimo -----------"
+print "----------- Procedure Renovar Emprestimo -----------"
 try:
 	execute("SELECT renovar_emprestimo(6) ", cursor)
 	consulta("SELECT * FROM emprestimo ORDER BY idEmprestimo", cursor)
@@ -147,7 +147,7 @@ except Exception as e:
         print("Failed "+str(e))
         pass
 
-print "----------- view Renovar Emprestimo -----------"
+print "----------- Procedure Renovar Emprestimo -----------"
 try:
 	execute("SELECT renovar_emprestimo(4) ", cursor)
 	consulta("SELECT * FROM emprestimo ORDER BY idEmprestimo", cursor)

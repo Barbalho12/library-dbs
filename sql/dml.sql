@@ -64,15 +64,15 @@ INSERT INTO Localizacao (andar, sala, estante, idBiblioteca)
 
 INSERT INTO Exemplar (preco, codigo_barras, data_compra, estado_fisico, idLivro, idLocalizacao, status)
     VALUES  (40.0, '11111111', '10/05/2015', 'DANIFICADO', 1, 2, 'DISPONIVEL'),
-            (40.0, '11111111', '10/05/2015',        'BOM', 1, 2, 'DISPONIVEL'),
-            (40.0, '11111111', '11/02/2016',        'BOM', 1, 2, 'DISPONIVEL'),
+            (40.0, '11111111', '10/05/2015', 'CONSERVADO', 1, 2, 'DISPONIVEL'),
+            (40.0, '11111111', '11/02/2016', 'CONSERVADO', 1, 2, 'DISPONIVEL'),
             (40.0, '11111111', '11/02/2016', 'DANIFICADO', 1, 2, 'DISPONIVEL'),
-            (40.0, '11111111', '26/09/2017',        'BOM', 1, 2, 'DISPONIVEL'),
-            (40.0, '11111111', '26/09/2017',        'BOM', 1, 2, 'DISPONIVEL'),
+            (40.0, '11111111', '26/09/2017', 'CONSERVADO', 1, 2, 'DISPONIVEL'),
+            (40.0, '11111111', '26/09/2017', 'CONSERVADO', 1, 2, 'DISPONIVEL'),
             (20.0, '11111112', '10/05/2003', 'DANIFICADO', 2, 1, 'DISPONIVEL'),
             (20.0, '11111112', '10/05/2003', 'DANIFICADO', 2, 1, 'DISPONIVEL'),
             (20.0, '11111112', '10/05/2003', 'DANIFICADO', 2, 1, 'DISPONIVEL'),
-            (20.0, '11111112', '10/05/2003',        'BOM', 2, 1, 'DISPONIVEL');
+            (20.0, '11111112', '10/05/2003', 'CONSERVADO', 2, 1, 'DISPONIVEL');
 
 INSERT INTO Emprestimo (idExemplar, idCliente, idFuncionario, data_emprestimo, data_prev_entrega, status_emprestimo)
     VALUES  (1, 1, 1, '05/07/2017', '20/07/2017', 'FINALIZADO'),

@@ -163,3 +163,8 @@ except Exception as e:
 
 print "----------- view Emprestimo -----------"
 consulta("SELECT * FROM emprestimo ORDER BY idEmprestimo", cursor)
+
+
+print "----------- Atualizando Multas -----------"
+execute("SELECT update_multa()", cursor)
+

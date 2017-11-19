@@ -155,8 +155,9 @@ CREATE TABLE IF NOT EXISTS Multa(
     idMulta SERIAL,
     idCliente INTEGER,
     categoria VARCHAR(15),
-    status_conclusao VARCHAR(15) CHECK (status_conclusao = 'NAO_INICIADA' or status_conclusao = 'PENDENTE' or status_conclusao = 'FINALIZADA'),
+    status_conclusao VARCHAR(15) CHECK (status_conclusao = 'PENDENTE' or status_conclusao = 'FINALIZADA'),
     idEmprestimo INTEGER,
+    date_conclusao DATE,
     PRIMARY KEY( idMulta ),
     FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente) ON UPDATE NO ACTION ON DELETE NO ACTION,
     FOREIGN KEY (idEmprestimo) REFERENCES Emprestimo (idEmprestimo) ON UPDATE NO ACTION ON DELETE NO ACTION
@@ -208,7 +209,6 @@ CREATE VIEW emprestimo_debito AS
     WHERE emp.status_emprestimo != 'FINALIZADO';
 
 
-
 ------------------------------------------
 
 -- Função que atualiza a data de entrega e o status do emprestimo
@@ -241,10 +241,6 @@ CREATE TRIGGER trig_make_emprestimo_ativo
 
 ------------------------------------------
 
-
-
-------------------------------------------
-
 -- Função que atualiza status de exemplar e emprestimo quando ocorre uma devolução
 CREATE OR REPLACE FUNCTION make_devolucao() RETURNS TRIGGER AS
 $BODY$
@@ -261,6 +257,11 @@ BEGIN
         UPDATE Emprestimo
         set status_emprestimo = 'FINALIZADO'
         WHERE idExemplar = var_r.idExemplar;
+
+        IF NEW.data_devolucao > var_r.data_prev_entrega THEN
+            INSERT INTO  Multa (idCliente, categoria, status_conclusao, idEmprestimo, date_conclusao)
+            VALUES(NEW.idCliente, 'ATRASO', 'PENDENTE', var_r.idExemplar, NEW.data_devolucao+((NEW.data_devolucao-var_r.data_prev_entrega) * 3));
+        END IF;
     END LOOP;
 
     RETURN NEW;
@@ -277,6 +278,38 @@ CREATE TRIGGER trig_make_devolucao
 ------------------------------------------
 
 
+-- Função que VERIFICA se é possível fazer emprestimo
+CREATE OR REPLACE FUNCTION make_emprestimo() RETURNS TRIGGER AS
+$BODY$
+DECLARE 
+    var_r record;
+BEGIN
+    IF (SELECT COUNT(*) FROM Emprestimo emp WHERE emp.idCliente = NEW.idCliente AND emp.status_emprestimo != 'FINALIZADO') > 3 THEN
+        RAISE EXCEPTION 'Limite de emprestimos Excedido!';
+    END IF;
+
+    IF (SELECT COUNT(*) FROM Emprestimo emp WHERE emp.idCliente = NEW.idCliente AND emp.status_emprestimo = 'ATRASADO') != 0 THEN
+        RAISE EXCEPTION 'Não é possível realizar emprestimo com emprestimos atrasados!';
+    END IF;
+
+    IF (SELECT COUNT(*) FROM Multa m WHERE m.idCliente = NEW.idCliente AND m.status_conclusao = 'PENDENTE') != 0 THEN
+        RAISE EXCEPTION 'Não é possível realizar emprestimo pois o usuário está cumprindo multa!';
+    END IF;
+
+    RETURN NEW;
+END;
+$BODY$
+language plpgsql;
+
+-- Gatilho acionado quando um emprestimo é inserido
+CREATE TRIGGER trig_make_emprestimo
+     AFTER INSERT ON Emprestimo
+     FOR EACH ROW
+     EXECUTE PROCEDURE make_emprestimo();
+
+------------------------------------------
+
+
 
 -- Procedure to Renovar emprestimo
 CREATE OR REPLACE FUNCTION renovar_emprestimo(id_emprestimo INTEGER) 
@@ -284,30 +317,41 @@ RETURNS void AS $$
 DECLARE 
     var_r record;
 BEGIN
-    -- record = (SELECT data_prev_entrega FROM Emprestimo emp WHERE emp.idEmprestimo = id_emprestimo ORDER BY data_prev_entrega DESC LIMIT 1);
-    -- FOR var_r IN(SELECT * FROM Emprestimo emp WHERE emp.idEmprestimo = id_emprestimo)  LOOP
+    IF (SELECT data_prev_entrega FROM Emprestimo emp WHERE emp.idEmprestimo = id_emprestimo ORDER BY data_prev_entrega DESC LIMIT 1) < CURRENT_DATE THEN
+        RAISE EXCEPTION 'Não é possível renovar emprestimo, pois a situação do material está em atraso!';
+    END IF;
 
-        IF (SELECT data_prev_entrega FROM Emprestimo emp WHERE emp.idEmprestimo = id_emprestimo ORDER BY data_prev_entrega DESC LIMIT 1) < CURRENT_DATE THEN
-            RAISE EXCEPTION 'Não é possível renovar emprestimo, pois a situação do material está em atraso!';
-        END IF;
+    IF (SELECT status_emprestimo FROM Emprestimo emp WHERE emp.idEmprestimo = id_emprestimo ORDER BY data_prev_entrega DESC LIMIT 1) != 'ATIVO' THEN
+        RAISE EXCEPTION 'Só é possível renovar emprestimos ativos!';
+    END IF;
 
-        IF (SELECT status_emprestimo FROM Emprestimo emp WHERE emp.idEmprestimo = id_emprestimo ORDER BY data_prev_entrega DESC LIMIT 1) != 'ATIVO' THEN
-            RAISE EXCEPTION 'Só é possível renovar emprestimos ativos!';
-        END IF;
+    IF (SELECT data_prev_entrega FROM Emprestimo emp WHERE emp.idEmprestimo = id_emprestimo ORDER BY data_prev_entrega DESC LIMIT 1) >= CURRENT_DATE THEN
+        UPDATE Emprestimo
+        set status_emprestimo = 'RENOVADO'
+        WHERE idEmprestimo = id_emprestimo;
 
-        IF (SELECT data_prev_entrega FROM Emprestimo emp WHERE emp.idEmprestimo = id_emprestimo ORDER BY data_prev_entrega DESC LIMIT 1) >= CURRENT_DATE THEN
-            UPDATE Emprestimo
-            set status_emprestimo = 'RENOVADO'
-            WHERE idEmprestimo = id_emprestimo;
+        UPDATE Emprestimo
+        set data_prev_entrega = (SELECT data_prev_entrega FROM Emprestimo emp WHERE emp.idEmprestimo = id_emprestimo ORDER BY data_prev_entrega DESC LIMIT 1) + 15
+        WHERE idEmprestimo = id_emprestimo;
 
-            UPDATE Emprestimo
-            set data_prev_entrega = (SELECT data_prev_entrega FROM Emprestimo emp WHERE emp.idEmprestimo = id_emprestimo ORDER BY data_prev_entrega DESC LIMIT 1) + 15
-            WHERE idEmprestimo = id_emprestimo;
+    END IF;
 
-        END IF;
-        
-    -- END LOOP;
 END;
 $$ LANGUAGE plpgsql;
 
 
+
+
+-- Procedure atualiza multas
+CREATE OR REPLACE FUNCTION update_multa() 
+RETURNS void AS $$
+DECLARE 
+    var_r record;
+BEGIN
+    FOR var_r IN(SELECT * FROM Multa m WHERE m.date_conclusao >= CURRENT_DATE)  LOOP
+        UPDATE Multa
+        SET status_conclusao = 'FINALIZADA'
+        WHERE idMulta = var_r.idMulta;
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;

@@ -194,9 +194,22 @@ CREATE VIEW alerta_clientes AS
           emp.data_prev_entrega - CURRENT_DATE <= 2;
 
 
+-- Retorna Exemplares que não estão disponiveis
+CREATE VIEW exemplar_indisponivel AS
+    SELECT exe.idExemplar
+    FROM Exemplar exe
+    WHERE exe.status = 'INDISPONIVEL';
+
+
+-- Retorna Emprestimos não finalizados
+CREATE VIEW emprestimo_debito AS
+    SELECT emp.idExemplar
+    FROM Emprestimo emp
+    WHERE emp.status_emprestimo != 'FINALIZADO';
+
+
 
 ------------------------------------------
-
 
 -- Função que atualiza a data de entrega e o status do emprestimo
 CREATE OR REPLACE FUNCTION make_emprestimo_ativo() RETURNS TRIGGER AS
@@ -226,8 +239,40 @@ CREATE TRIGGER trig_make_emprestimo_ativo
      FOR EACH ROW
      EXECUTE PROCEDURE make_emprestimo_ativo();
 
-
 ------------------------------------------
 
 
+
+------------------------------------------
+
+-- Função que atualiza status de exemplar e emprestimo quando ocorre uma devolução
+CREATE OR REPLACE FUNCTION make_devolucao() RETURNS TRIGGER AS
+$BODY$
+DECLARE 
+    var_r record;
+BEGIN
+    FOR var_r IN(SELECT * FROM exemplar_indisponivel)  LOOP
+        UPDATE Exemplar
+        set status = 'DISPONIVEL'
+        WHERE idExemplar = var_r.idExemplar;
+    END LOOP;
+
+    FOR var_r IN(SELECT * FROM emprestimo_debito)  LOOP
+        UPDATE Emprestimo
+        set status_emprestimo = 'FINALIZADO'
+        WHERE idExemplar = var_r.idExemplar;
+    END LOOP;
+
+    RETURN NEW;
+END;
+$BODY$
+language plpgsql;
+
+-- Gatilho acionado quando um emprestimo é inserido
+CREATE TRIGGER trig_make_devolucao
+     AFTER INSERT ON Devolucao
+     FOR EACH ROW
+     EXECUTE PROCEDURE make_devolucao()
+
+------------------------------------------
 

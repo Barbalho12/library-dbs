@@ -62,22 +62,22 @@ INSERT INTO Localizacao (andar, sala, estante, idBiblioteca)
             (2, 'P', '5C', 2),
             (2, 'P', '5C', 2);
 
-INSERT INTO Exemplar (preco, codigo_barras, data_compra, estado_fisico, idLivro, idLocalizacao)
-    VALUES  (40.0, '11111111', '10/05/2015', 'DANIFICADO', 1, 2),
-            (40.0, '11111111', '10/05/2015',        'BOM', 1, 2),
-            (40.0, '11111111', '11/02/2016',        'BOM', 1, 2),
-            (40.0, '11111111', '11/02/2016', 'DANIFICADO', 1, 2),
-            (40.0, '11111111', '26/09/2017',        'BOM', 1, 2),
-            (40.0, '11111111', '26/09/2017',        'BOM', 1, 2),
-            (20.0, '11111112', '10/05/2003', 'DANIFICADO', 2, 1),
-            (20.0, '11111112', '10/05/2003', 'DANIFICADO', 2, 1),
-            (20.0, '11111112', '10/05/2003', 'DANIFICADO', 2, 1),
-            (20.0, '11111112', '10/05/2003',        'BOM', 2, 1);
+INSERT INTO Exemplar (preco, codigo_barras, data_compra, estado_fisico, idLivro, idLocalizacao, status)
+    VALUES  (40.0, '11111111', '10/05/2015', 'DANIFICADO', 1, 2, 'DISPONIVEL'),
+            (40.0, '11111111', '10/05/2015',        'BOM', 1, 2, 'DISPONIVEL'),
+            (40.0, '11111111', '11/02/2016',        'BOM', 1, 2, 'DISPONIVEL'),
+            (40.0, '11111111', '11/02/2016', 'DANIFICADO', 1, 2, 'DISPONIVEL'),
+            (40.0, '11111111', '26/09/2017',        'BOM', 1, 2, 'DISPONIVEL'),
+            (40.0, '11111111', '26/09/2017',        'BOM', 1, 2, 'DISPONIVEL'),
+            (20.0, '11111112', '10/05/2003', 'DANIFICADO', 2, 1, 'DISPONIVEL'),
+            (20.0, '11111112', '10/05/2003', 'DANIFICADO', 2, 1, 'DISPONIVEL'),
+            (20.0, '11111112', '10/05/2003', 'DANIFICADO', 2, 1, 'DISPONIVEL'),
+            (20.0, '11111112', '10/05/2003',        'BOM', 2, 1, 'DISPONIVEL');
 
 INSERT INTO Emprestimo (idExemplar, idCliente, idFuncionario, data_emprestimo, data_prev_entrega, status_emprestimo)
     VALUES  (1, 1, 1, '05/07/2017', '20/07/2017', 'FINALIZADO'),
             (1, 1, 1, '15/08/2017', '30/08/2017',   'ATRASADO'),
-            (2, 2, 1, '10/11/2017', '25/11/2017', 'ATIVO'),
+            (2, 2, 1, '10/11/2017', '20/11/2017', 'ATIVO'),
             (3, 2, 1, '01/10/2017', '30/11/2017',   'RENOVADO');
 
 INSERT INTO Devolucao (idExemplar, idCliente, idFuncionario, data_devolucao)

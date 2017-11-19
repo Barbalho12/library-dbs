@@ -98,6 +98,7 @@ CREATE TABLE IF NOT EXISTS Exemplar(
     estado_fisico VARCHAR(20) CHECK (estado_fisico = 'DANIFICADO' or estado_fisico = 'BOM'),
     idLivro INTEGER,
     idLocalizacao INTEGER,
+    status VARCHAR(20) CHECK (status = 'DISPONIVEL' or status = 'INDISPONIVEL'),
     PRIMARY KEY( idExemplar ),
     FOREIGN KEY (idLivro) REFERENCES Livro (idLivro) ON UPDATE NO ACTION ON DELETE NO ACTION,
     FOREIGN KEY (idLocalizacao) REFERENCES Localizacao (idLocalizacao) ON UPDATE NO ACTION ON DELETE NO ACTION
@@ -168,5 +169,29 @@ CREATE TABLE IF NOT EXISTS Requisicao(
     PRIMARY KEY( idRequisicao ),
     FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente) ON UPDATE NO ACTION ON DELETE NO ACTION
 );
+
+
+-- Retorna relação de livros com seus autores e número de exemplares disponíveis
+CREATE VIEW situacao_livros AS
+    SELECT liv.titulo "Titulo do livro", aut.nome "Autor" , 
+    (  
+        SELECT COUNT(exe.idExemplar) 
+        FROM Exemplar exe
+        WHERE exe.idLivro = liv.idLivro and 
+              exe.status = 'DISPONIVEL'
+    )  "Quantidade disponível"
+
+    FROM Livro liv, Autor aut
+    WHERE aut.idAutor = liv.idAutor;
+
+
+-- Retorna Clientes com emprestimos ativos e previsão de entrega próxima do final (Cliente, email, dias restantes)
+CREATE VIEW alerta_clientes AS
+    SELECT cli.nome "Cliente", cli.email "Email", emp.data_prev_entrega - CURRENT_DATE "Dias Restantes"
+    FROM Cliente cli, Emprestimo emp
+    WHERE emp.idCliente = cli.idCliente and 
+          emp.status_emprestimo = 'ATIVO' and
+          emp.data_prev_entrega - CURRENT_DATE <= 2;
+
 
 

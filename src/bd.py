@@ -1,6 +1,9 @@
 import psycopg2
 import pprint
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT 
+from psycopg2.extras import RealDictCursor
+import json
+
 
 dbname_default = 'postgres'
 host_default ='localhost'
@@ -12,6 +15,14 @@ dbname_biblioteca = 'biblioteca'
 file_creation_db = '../sql/ddl_create_database.sql'
 file_create_tables = '../sql/ddl_create_tables.sql'
 file_insert_data = '../sql/dml.sql'
+
+
+def readFileJson(file):
+	file = open(file, 'r')
+	data_file = file.read()
+	file.close()
+	data = json.loads(data_file)
+	return data
 
 
 ## DELETA A BASE DADOS
@@ -54,9 +65,34 @@ def connect_db():
 
 
 def get_cursor(con):
-	cursor = con.cursor()
+	# cursor = con.cursor()
+	cursor = con.cursor(cursor_factory=RealDictCursor)
 	con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
 	return cursor
+
+
+def consulta(sql, cursor):
+	
+	cursor.execute( sql )
+	records = cursor.fetchall()
+
+	try:
+		colunas = ""
+		for coluna in records[0]:
+			colunas += coluna+' | '
+
+		print colunas
+		for tupla in records:
+			values = ""
+			for coluna in tupla:
+				values += str(tupla[coluna])+' | '
+			print values
+	except:
+		pass
+
+	return records
+
+
 
 create_tables = readSQLFile(file_create_tables)
 insert_data = readSQLFile(file_insert_data)
@@ -67,11 +103,26 @@ cursor = get_cursor(con)
 cursor.execute( create_tables )
 print "Create Tables"
 
+# ----------
+
 cursor.execute( insert_data )
 print "Insert Data"
 
-cursor.execute( "select * from Cliente" )
+# ----------
 
-records = cursor.fetchall()
+print "----------- consultando clientes -----------"
+consulta("SELECT * FROM Cliente", cursor)
 
-pprint.pprint(records)
+# ----------
+
+print "----------- view situacao_livros -----------"
+consulta("SELECT * FROM situacao_livros", cursor)
+
+# ----------
+
+print "----------- view situacao_livros -----------"
+consulta("SELECT * FROM alerta_clientes", cursor)
+
+
+
+

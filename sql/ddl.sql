@@ -67,7 +67,6 @@ CREATE TABLE IF NOT EXISTS Livro(
     descricao TEXT,
     idEditora INTEGER,
     PRIMARY KEY( idLivro ),
-    FOREIGN KEY (idAutor) REFERENCES Autor (idAutor) ON UPDATE NO ACTION ON DELETE SET NULL,
     FOREIGN KEY (idEditora) REFERENCES Editora (idEditora) ON UPDATE NO ACTION ON DELETE SET NULL
 );
 
@@ -179,8 +178,8 @@ CREATE VIEW situacao_livros AS
               exe.status = 'DISPONIVEL'
     )  "Quantidade disponível"
 
-    FROM Livro liv, Autor aut
-    WHERE aut.idAutor = liv.idAutor;
+    FROM Livro liv, Autor aut, Autor_Livro al
+    WHERE aut.idAutor = al.idAutor and liv.idLivro = al.idLivro;
 
 
 -- Retorna Clientes com emprestimos ativos e previsão de entrega próxima do final 

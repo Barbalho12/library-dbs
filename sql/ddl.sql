@@ -65,7 +65,6 @@ CREATE TABLE IF NOT EXISTS Livro(
     ano_publicacao INT,
     linguagem TEXT,
     descricao TEXT,
-    idAutor INTEGER,
     idEditora INTEGER,
     PRIMARY KEY( idLivro ),
     FOREIGN KEY (idAutor) REFERENCES Autor (idAutor) ON UPDATE NO ACTION ON DELETE SET NULL,
@@ -137,16 +136,6 @@ CREATE TABLE IF NOT EXISTS Emprestimo(
     FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente)     ON UPDATE NO ACTION ON DELETE SET NULL,
     FOREIGN KEY (idFuncionario) REFERENCES Funcionario (idFuncionario)
 );
-
--- CREATE TABLE IF NOT EXISTS Renovacao(
---     idRenovacao SERIAL,
---     idEmprestimo INTEGER,
---     idCliente INTEGER,
---     data_renovacao date,
---     PRIMARY KEY( idRenovacao ),
---     FOREIGN KEY (idCliente) REFERENCES Cliente (idCliente),
---     FOREIGN KEY (idEmprestimo) REFERENCES Emprestimo (idEmprestimo)
--- );
 
 CREATE TABLE IF NOT EXISTS Reserva(
     idReserva SERIAL,

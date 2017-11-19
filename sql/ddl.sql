@@ -272,7 +272,42 @@ language plpgsql;
 CREATE TRIGGER trig_make_devolucao
      AFTER INSERT ON Devolucao
      FOR EACH ROW
-     EXECUTE PROCEDURE make_devolucao()
+     EXECUTE PROCEDURE make_devolucao();
 
 ------------------------------------------
+
+
+
+-- Procedure to Renovar emprestimo
+CREATE OR REPLACE FUNCTION renovar_emprestimo(id_emprestimo INTEGER) 
+RETURNS void AS $$
+DECLARE 
+    var_r record;
+BEGIN
+    -- record = (SELECT data_prev_entrega FROM Emprestimo emp WHERE emp.idEmprestimo = id_emprestimo ORDER BY data_prev_entrega DESC LIMIT 1);
+    -- FOR var_r IN(SELECT * FROM Emprestimo emp WHERE emp.idEmprestimo = id_emprestimo)  LOOP
+
+        IF (SELECT data_prev_entrega FROM Emprestimo emp WHERE emp.idEmprestimo = id_emprestimo ORDER BY data_prev_entrega DESC LIMIT 1) < CURRENT_DATE THEN
+            RAISE EXCEPTION 'Não é possível renovar emprestimo, pois a situação do material está em atraso!';
+        END IF;
+
+        IF (SELECT status_emprestimo FROM Emprestimo emp WHERE emp.idEmprestimo = id_emprestimo ORDER BY data_prev_entrega DESC LIMIT 1) != 'ATIVO' THEN
+            RAISE EXCEPTION 'Só é possível renovar emprestimos ativos!';
+        END IF;
+
+        IF (SELECT data_prev_entrega FROM Emprestimo emp WHERE emp.idEmprestimo = id_emprestimo ORDER BY data_prev_entrega DESC LIMIT 1) >= CURRENT_DATE THEN
+            UPDATE Emprestimo
+            set status_emprestimo = 'RENOVADO'
+            WHERE idEmprestimo = id_emprestimo;
+
+            UPDATE Emprestimo
+            set data_prev_entrega = (SELECT data_prev_entrega FROM Emprestimo emp WHERE emp.idEmprestimo = id_emprestimo ORDER BY data_prev_entrega DESC LIMIT 1) + 15
+            WHERE idEmprestimo = id_emprestimo;
+
+        END IF;
+        
+    -- END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
 

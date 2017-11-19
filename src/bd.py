@@ -71,6 +71,11 @@ def get_cursor(con):
 	return cursor
 
 
+
+def execute(sql, cursor):
+	cursor.execute( sql )
+	records = cursor.fetchall()
+
 def consulta(sql, cursor):
 	
 	cursor.execute( sql )
@@ -124,8 +129,37 @@ print "----------- view situacao_livros -----------"
 consulta("SELECT * FROM alerta_clientes", cursor)
 
 
-print "----------- view situacao_livros -----------"
-consulta("SELECT * FROM emprestimo", cursor)
+print "----------- view Emprestimo -----------"
+consulta("SELECT * FROM emprestimo ORDER BY idEmprestimo", cursor)
+
+print "----------- view Reserva -----------"
+consulta("SELECT * FROM Reserva", cursor)
 
 
+print "----------- view Renovar Emprestimo -----------"
+try:
+	execute("SELECT renovar_emprestimo(6) ", cursor)
+	consulta("SELECT * FROM emprestimo ORDER BY idEmprestimo", cursor)
+except Exception as e:
+        print("Failed "+str(e))
+        pass
 
+print "----------- view Renovar Emprestimo -----------"
+try:
+	execute("SELECT renovar_emprestimo(4) ", cursor)
+	consulta("SELECT * FROM emprestimo ORDER BY idEmprestimo", cursor)
+except Exception as e:
+        print("Failed "+str(e))
+        pass
+
+print "----------- view Renovar Emprestimo Atrasado -----------"
+try:
+	execute("SELECT renovar_emprestimo(5)", cursor)
+	consulta("SELECT * FROM emprestimo ORDER BY idEmprestimo", cursor)
+except Exception as e:
+        print("Failed "+str(e))
+        pass
+
+
+print "----------- view Emprestimo -----------"
+consulta("SELECT * FROM emprestimo ORDER BY idEmprestimo", cursor)

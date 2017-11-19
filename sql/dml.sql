@@ -77,8 +77,8 @@ INSERT INTO Exemplar (preco, codigo_barras, data_compra, estado_fisico, idLivro,
 INSERT INTO Emprestimo (idExemplar, idCliente, idFuncionario, data_emprestimo, data_prev_entrega, status_emprestimo)
     VALUES  (1, 1, 1, '05/07/2017', '20/07/2017', 'FINALIZADO'),
             (1, 1, 1, '15/08/2017', '30/08/2017',   'ATRASADO'),
-            (2, 2, 1, '10/11/2017', '20/11/2017', 'ATIVO'),
-            (3, 2, 1, '01/10/2017', '30/11/2017',   'RENOVADO');
+            (2, 2, 1, '10/11/2017', '20/11/2017', 'FINALIZADO'),
+            (3, 2, 1, '01/10/2017', '30/11/2017',   'FINALIZADO');
 
 INSERT INTO Devolucao (idExemplar, idCliente, idFuncionario, data_devolucao)
     VALUES  (1, 1, 1, '20/07/2017');
@@ -103,14 +103,41 @@ INSERT INTO Requisicao (idCliente, livro)
 
 
 
--- Transação: Realização de emprestimo
+-- Transação: Realização de emprestimo 1
 BEGIN;
-
     -- Cria um emprestimo informando (Exemplar, Cliente, Funcionário que realizou e a data de realização)
     INSERT INTO Emprestimo (idExemplar, idCliente, idFuncionario, data_emprestimo)
-        VALUES (3, 2, 1, '19/11/2017');
+        VALUES (3, 2, 1, '01/11/2017');
 
     -- Atualiza o status do exemplar como INDISPONIVEL
-    UPDATE Exemplar SET status = 'INDISPONIVEL' WHERE idExemplar = 3;
+    UPDATE Exemplar 
+    SET status = 'INDISPONIVEL' 
+    WHERE idExemplar = 3;
 
+
+    UPDATE Reserva 
+    SET status_reserva = 'FINALIZADA' 
+    WHERE idCliente = 2 AND
+          status_reserva = 'ATIVA' AND
+          idLivro IN (SELECT idLivro FROM Exemplar WHERE idExemplar = 3);
+COMMIT;
+
+
+-- Transação: Realização de emprestimo 2
+BEGIN;
+    -- Cria um emprestimo informando (Exemplar, Cliente, Funcionário que realizou e a data de realização)
+    INSERT INTO Emprestimo (idExemplar, idCliente, idFuncionario, data_emprestimo)
+        VALUES (10, 1, 1, '19/11/2017');
+
+    -- Atualiza o status do exemplar como INDISPONIVEL
+    UPDATE Exemplar 
+    SET status = 'INDISPONIVEL' 
+    WHERE idExemplar = 10;
+
+
+    UPDATE Reserva 
+    SET status_reserva = 'FINALIZADA' 
+    WHERE idCliente = 1 AND
+          status_reserva = 'ATIVA' AND
+          idLivro IN (SELECT idLivro FROM Exemplar WHERE idExemplar = 10);
 COMMIT;

@@ -171,3 +171,8 @@ consulta("SELECT * FROM emprestimo ORDER BY idEmprestimo", cursor)
 print "----------- Atualizando Multas -----------"
 execute("SELECT update_multa()", cursor)
 
+print "----------- Consultando licros com Multiplos autores -----------"
+consulta("SELECT * FROM livro_com_autor", cursor)
+
+
+

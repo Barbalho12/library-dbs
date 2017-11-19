@@ -72,6 +72,14 @@ CREATE TABLE IF NOT EXISTS Livro(
     FOREIGN KEY (idEditora) REFERENCES Editora (idEditora) ON UPDATE NO ACTION ON DELETE SET NULL
 );
 
+CREATE TABLE IF NOT EXISTS Autor_Livro(
+    idLivro INTEGER,
+    idAutor INTEGER,
+    PRIMARY KEY( idLivro,  idAutor),
+    FOREIGN KEY (idAutor) REFERENCES Autor (idAutor) ON UPDATE NO ACTION ON DELETE CASCADE,
+    FOREIGN KEY (idLivro) REFERENCES Livro (idLivro) ON UPDATE NO ACTION ON DELETE CASCADE
+);
+
 -- Entidades de Exemplar
 CREATE TABLE IF NOT EXISTS Biblioteca(
     idBiblioteca SERIAL,
@@ -186,7 +194,7 @@ CREATE VIEW situacao_livros AS
     WHERE aut.idAutor = liv.idAutor;
 
 
--- Retorna Clientes com emprestimos ativos e previsão de entrega próxima do final (Cliente, email, dias restantes)
+-- Retorna Clientes com emprestimos ativos e previsão de entrega próxima do final 
 CREATE VIEW alerta_clientes AS
     SELECT cli.nome "Cliente", cli.email "Email", emp.data_prev_entrega - CURRENT_DATE "Dias Restantes"
     FROM Cliente cli, Emprestimo emp
@@ -207,6 +215,15 @@ CREATE VIEW emprestimo_debito AS
     SELECT emp.idExemplar
     FROM Emprestimo emp
     WHERE emp.status_emprestimo != 'FINALIZADO';
+
+
+-- Retorna Emprestimos não finalizados
+CREATE VIEW livro_com_autor AS
+    SELECT liv.titulo, STRING_AGG(aut.nome, ', ') AS Autores
+    FROM Livro liv, Autor aut, Autor_Livro al
+    WHERE liv.idLivro = al.idLivro and
+          aut.idAutor = al.idAutor
+    GROUP  BY 1;
 
 
 ------------------------------------------
@@ -317,25 +334,35 @@ RETURNS void AS $$
 DECLARE 
     var_r record;
 BEGIN
-    IF (SELECT data_prev_entrega FROM Emprestimo emp WHERE emp.idEmprestimo = id_emprestimo ORDER BY data_prev_entrega DESC LIMIT 1) < CURRENT_DATE THEN
-        RAISE EXCEPTION 'Não é possível renovar emprestimo, pois a situação do material está em atraso!';
+    IF (SELECT data_prev_entrega FROM Emprestimo emp 
+        WHERE emp.idEmprestimo = id_emprestimo 
+        ORDER BY data_prev_entrega DESC LIMIT 1) < CURRENT_DATE THEN
+        
+        RAISE EXCEPTION 'Não é possível renovar emprestimo, 
+        pois a situação do material está em atraso!';
     END IF;
 
-    IF (SELECT status_emprestimo FROM Emprestimo emp WHERE emp.idEmprestimo = id_emprestimo ORDER BY data_prev_entrega DESC LIMIT 1) != 'ATIVO' THEN
+    IF (SELECT status_emprestimo FROM Emprestimo emp 
+        WHERE emp.idEmprestimo = id_emprestimo 
+        ORDER BY data_prev_entrega DESC LIMIT 1) != 'ATIVO' THEN
+        
         RAISE EXCEPTION 'Só é possível renovar emprestimos ativos!';
     END IF;
 
-    IF (SELECT data_prev_entrega FROM Emprestimo emp WHERE emp.idEmprestimo = id_emprestimo ORDER BY data_prev_entrega DESC LIMIT 1) >= CURRENT_DATE THEN
+    IF (SELECT data_prev_entrega FROM Emprestimo emp 
+        WHERE emp.idEmprestimo = id_emprestimo 
+        ORDER BY data_prev_entrega DESC LIMIT 1) >= CURRENT_DATE THEN
         UPDATE Emprestimo
         set status_emprestimo = 'RENOVADO'
         WHERE idEmprestimo = id_emprestimo;
 
         UPDATE Emprestimo
-        set data_prev_entrega = (SELECT data_prev_entrega FROM Emprestimo emp WHERE emp.idEmprestimo = id_emprestimo ORDER BY data_prev_entrega DESC LIMIT 1) + 15
+        set data_prev_entrega = (SELECT data_prev_entrega 
+                                 FROM Emprestimo emp 
+                                 WHERE emp.idEmprestimo = id_emprestimo 
+                                 ORDER BY data_prev_entrega DESC LIMIT 1) + 15
         WHERE idEmprestimo = id_emprestimo;
-
     END IF;
-
 END;
 $$ LANGUAGE plpgsql;
 
@@ -355,3 +382,6 @@ BEGIN
     END LOOP;
 END;
 $$ LANGUAGE plpgsql;
+
+
+

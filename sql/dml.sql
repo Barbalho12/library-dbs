@@ -35,18 +35,29 @@ INSERT INTO Autor (nome)
     VALUES  ('José de Alencar'),
             ('Augusto Cury'),
             ('Monteiro Lobato'),
-            ('Agatha Christie');
+            ('Agatha Christie'),
+            ('Jim Kurose'),
+            ('Keith Ross');
 
 INSERT INTO Editora (nome, telefone, email)
     VALUES  ('Rocco',         11111,         'rocco@sac.com'),
             ('Sextante',      22222,      'sextante@sac.com'),
             ('Melhoramentos', 33333, 'melhoramentos@sac.com'),
             ('Ática',         44444,         'atica@sac.com'),
-            ('Saraiva',       55555,       'saraiva@sac.com');
+            ('Saraiva',       55555,       'saraiva@sac.com'),
+            ('Pearson',       12455,       'Pearson@sac.com');
 
-INSERT INTO Livro (titulo, isbn, edicao, ano_publicacao, linguagem, descricao, idAutor, idEditora)
-    VALUES  ('O Homem Mais Inteligente da História', '978-85-4310-435-5', 1, 2016, 'Português', '', 2, 2),
-            (                             'Iracema',                  '', 1, 1865, 'Português', '', 1, 3);
+INSERT INTO Livro (titulo, isbn, edicao, ano_publicacao, linguagem, descricao, idEditora)
+    VALUES  ('O Homem Mais Inteligente da História', '978-85-4310-435-5', 1, 2016, 'Português', '', 2),
+            (                             'Iracema',                  '', 1, 1865, 'Português', '', 3),
+            ('Redes de Computadores e a Internet', '978-85-8143-677-7', 6, 2013, 'Portugês', 'Uma Abordagem Top-Down', 6);
+
+INSERT INTO Autor_Livro (idLivro, idAutor)
+    VALUES  (2 , 1),
+            (1 , 2),
+            (3 , 5),
+            (3 , 6);
+
 
 INSERT INTO Biblioteca (nome, descricao_endereco)
     VALUES  ('Biblioteca Central Zila Mamede', 'Próxima ao centro de convivência'),

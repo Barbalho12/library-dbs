@@ -13,7 +13,7 @@ password_default ='postgres'
 dbname_biblioteca = 'biblioteca'
 
 file_creation_db = '../sql/ddl_create_database.sql'
-file_create_tables = '../sql/ddl_create_tables.sql'
+file_create_tables = '../sql/ddl.sql'
 file_insert_data = '../sql/dml.sql'
 
 
@@ -123,6 +123,9 @@ consulta("SELECT * FROM situacao_livros", cursor)
 print "----------- view situacao_livros -----------"
 consulta("SELECT * FROM alerta_clientes", cursor)
 
+
+print "----------- view situacao_livros -----------"
+consulta("SELECT * FROM emprestimo", cursor)
 
 
 

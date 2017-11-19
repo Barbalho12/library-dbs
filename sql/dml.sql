@@ -83,15 +83,12 @@ INSERT INTO Emprestimo (idExemplar, idCliente, idFuncionario, data_emprestimo, d
 INSERT INTO Devolucao (idExemplar, idCliente, idFuncionario, data_devolucao)
     VALUES  (1, 1, 1, '20/07/2017');
 
--- INSERT INTO Renovacao (idEmprestimo, idCliente, data_renovacao)
---     VALUES  (4, 2, '15/11/2017');
-
 INSERT INTO Reserva (idLivro, idCliente, data_reserva, status_reserva)
     VALUES  (2, 2, '08/11/2017', 'FINALIZADA'),
             (2, 1, '16/11/2017',      'ATIVA');
 
-INSERT INTO Multa (idCliente, categoria, status_conclusao, idEmprestimo)
-    VALUES  (1, 'ATRASO', 'NAO_INICIADA', 2);
+-- INSERT INTO Multa (idCliente, categoria, status_conclusao, idEmprestimo)
+--     VALUES  (1, 'ATRASO', 'NAO_INICIADA', 2);
 
 INSERT INTO Requisicao (idCliente, livro)
     VALUES  (1,                        'Mitologia Nórdica - Neil Gaiman'),
@@ -102,3 +99,18 @@ INSERT INTO Requisicao (idCliente, livro)
             (6,         'Harry Potter e a Ordem da Fenix - J.K. Rowling'),
             (6,       'Harry Potter e o Príncipe Mestiço - J.K. Rowling'),
             (6,    'Harry Potter e as Relíquias da Morte - J.K. Rowling');
+
+
+
+
+-- Transação: Realização de emprestimo
+BEGIN;
+
+    -- Cria um emprestimo informando (Exemplar, Cliente, Funcionário que realizou e a data de realização)
+    INSERT INTO Emprestimo (idExemplar, idCliente, idFuncionario, data_emprestimo)
+        VALUES (3, 2, 1, '19/11/2017');
+
+    -- Atualiza o status do exemplar como INDISPONIVEL
+    UPDATE Exemplar SET status = 'INDISPONIVEL' WHERE idExemplar = 3;
+
+COMMIT;

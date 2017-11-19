@@ -115,7 +115,7 @@ INSERT INTO Requisicao (idCliente, livro)
 
 
 -- Transação: Realização de emprestimo 1
-BEGIN;
+BEGIN WORK;
     -- Cria um emprestimo informando (Exemplar, Cliente, Funcionário que realizou e a data de realização)
     INSERT INTO Emprestimo (idExemplar, idCliente, idFuncionario, data_emprestimo)
         VALUES (3, 2, 1, '01/11/2017');
@@ -131,11 +131,11 @@ BEGIN;
     WHERE idCliente = 2 AND
           status_reserva = 'ATIVA' AND
           idLivro IN (SELECT idLivro FROM Exemplar WHERE idExemplar = 3);
-COMMIT;
+COMMIT WORK;
 
 
 -- Transação: Realização de emprestimo 2
-BEGIN;
+BEGIN WORK;
     -- Cria um emprestimo informando (Exemplar, Cliente, Funcionário que realizou e a data de realização)
     INSERT INTO Emprestimo (idExemplar, idCliente, idFuncionario, data_emprestimo)
         VALUES (10, 1, 1, '19/11/2017');
@@ -151,4 +151,7 @@ BEGIN;
     WHERE idCliente = 1 AND
           status_reserva = 'ATIVA' AND
           idLivro IN (SELECT idLivro FROM Exemplar WHERE idExemplar = 10);
-COMMIT;
+COMMIT WORK;
+
+
+

@@ -171,8 +171,20 @@ consulta("SELECT * FROM emprestimo ORDER BY idEmprestimo", cursor)
 print "----------- Atualizando Multas -----------"
 execute("SELECT update_multa()", cursor)
 
-print "----------- Consultando licros com Multiplos autores -----------"
+print "----------- Consultando livros com Multiplos autores -----------"
 consulta("SELECT * FROM livro_com_autor", cursor)
 
+
+print "----------- Consultando com join livros/autores -----------"
+consulta("""SELECT liv.titulo, aut.nome FROM Autor aut 
+    JOIN Autor_Livro al on al.idAutor = aut.idAutor
+	JOIN Livro liv on liv.idLivro = al.idLivro;""", cursor)
+
+
+print "----------- Consultando Historico de aluguel de exemplares com Right join livros/Clientes -----------"
+consulta("""SELECT exe.idExemplar, cli.nome, emp.data_emprestimo, liv.titulo FROM Cliente cli 
+    RIGHT OUTER JOIN Emprestimo emp on cli.idCliente = emp.idCliente
+	RIGHT OUTER JOIN exemplar exe on emp.idExemplar = exe.idExemplar
+	RIGHT OUTER JOIN Livro liv on liv.idLivro = exe.idLivro;""", cursor)
 
 

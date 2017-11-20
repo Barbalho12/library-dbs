@@ -188,3 +188,21 @@ consulta("""SELECT exe.idExemplar, cli.nome, emp.data_emprestimo, liv.titulo FRO
 	RIGHT OUTER JOIN Livro liv on liv.idLivro = exe.idLivro;""", cursor)
 
 
+print "----------- Function de Emprestimo (valor incorreto) -----------"
+try:
+	execute("select new_emprestimo(10, 12, 1, '19/11/2017')", cursor)
+except Exception as e:
+        print("Failed "+str(e))
+        pass
+
+
+print "----------- Executando DQL -----------"
+try:
+	dql = readSQLFile("../sql/dql.sql")
+	execute(dql, cursor)
+	print "OK"
+except Exception as e:
+        print("Failed "+str(e))
+        pass
+
+

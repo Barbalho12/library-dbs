@@ -3,32 +3,29 @@ SELECT * FROM Endereco;
 
 SELECT * FROM Credencial;
 
-SELECT * FROM Cliente;
+SELECT nome, email  FROM Cliente;
 
-SELECT * FROM Funcionario;
+SELECT nome FROM Funcionario;
 
-SELECT * FROM Editora;
+SELECT nome FROM Editora;
 
-SELECT * FROM Autor;
+SELECT nome FROM Autor;
 
-SELECT * FROM Livro;
+SELECT titulo, ano_publicacao FROM Livro;
 
-SELECT * FROM Autor_Livro;
+-- SELECT * FROM Autor_Livro;
 
-SELECT * FROM Biblioteca;
+SELECT nome, descricao_endereco  FROM Biblioteca;
 
-SELECT * FROM Exemplar;
+SELECT e.idExemplar, l.titulo, e.status FROM Exemplar e, Livro l WHERE e.idLivro = l.idLivro;
 
-SELECT * FROM Devolucao;
-
-SELECT * FROM Emprestimo;
+SELECT e.idExemplar, l.titulo, emp.data_emprestimo FROM Emprestimo emp, Exemplar e, Livro l WHERE e.idLivro = l.idLivro AND e.idExemplar = emp.idExemplar;
 
 SELECT * FROM Reserva;
 
-SELECT * FROM Multa;
+SELECT cli.nome, m.status_conclusao FROM Multa m, Cliente cli WHERE m.idCliente = cli.idCliente;
 
-SELECT * FROM Requisicao;
-
+SELECT cli.nome, r.livro FROM Requisicao r, Cliente cli WHERE r.idCliente = cli.idCliente;
 
 SELECT liv.titulo, aut.nome FROM Autor aut 
     JOIN Autor_Livro al on al.idAutor = aut.idAutor

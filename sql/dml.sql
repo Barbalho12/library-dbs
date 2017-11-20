@@ -154,4 +154,7 @@ BEGIN WORK;
 COMMIT WORK;
 
 
+select new_emprestimo(10, 1, 1, '19/11/2017');
+
+
 

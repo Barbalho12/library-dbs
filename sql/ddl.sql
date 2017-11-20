@@ -372,4 +372,44 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+    
+
+-- Procedure to Renovar emprestimo
+CREATE OR REPLACE FUNCTION new_emprestimo(idExemplar_ INTEGER, 
+    idCliente_ INTEGER, idFuncionario_ INTEGER, data_emprestimo_ DATE) 
+RETURNS void AS $$
+BEGIN 
+
+    IF  idExemplar_ NOT IN (SELECT idExemplar FROM Exemplar) THEN
+        RAISE EXCEPTION 'idExemplar % nao existe em Exemplar', idExemplar_;
+    END IF;
+
+    IF  idCliente_ NOT IN (SELECT idCliente FROM Cliente) THEN
+        RAISE EXCEPTION 'idCliente % nao existe em Cliente', idCliente_;
+    END IF;
+
+    IF  idFuncionario_ NOT IN (SELECT idFuncionario FROM Funcionario) THEN
+        RAISE EXCEPTION 'idFuncionario % nao existe em Funcionario', idFuncionario_;
+    END IF;
+
+    
+    INSERT INTO Emprestimo (idExemplar, idCliente, idFuncionario, data_emprestimo)
+        VALUES (idExemplar_, idCliente_, idFuncionario_, data_emprestimo_);
+
+    -- Atualiza o status do exemplar como INDISPONIVEL
+    UPDATE Exemplar 
+    SET status = 'INDISPONIVEL' 
+    WHERE idExemplar = idExemplar_;
+
+    UPDATE Reserva 
+    SET status_reserva = 'FINALIZADA' 
+    WHERE idCliente = idCliente_ AND
+          status_reserva = 'ATIVA' AND
+          idLivro IN (SELECT idLivro FROM Exemplar WHERE idExemplar = idExemplar_);
+
+    
+END;
+$$ LANGUAGE plpgsql;
+
+
 

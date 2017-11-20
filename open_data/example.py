@@ -2,6 +2,7 @@ import json
 import time
 import os
 from pprint import pprint
+import sys
 
 def readFileJson(file):
 	file = open(file, 'r')
@@ -11,7 +12,7 @@ def readFileJson(file):
 	return data
 
 #Get token
-os.system("curl -X POST \"http://apitestes.info.ufrn.br/authz-server/oauth/token?client_id=sesi-id&client_secret=segredo&grant_type=client_credentials\" > cred.txt")
+os.system("curl -X POST \"http://apitestes.info.ufrn.br/authz-server/oauth/token?client_id="+sys.argv[1]+"&client_secret="+sys.argv[2]+"&grant_type=client_credentials\" > cred.txt")
 
 data = readFileJson('cred.txt')
 access_token = data["access_token"]

@@ -200,7 +200,7 @@ CREATE VIEW exemplar_indisponivel AS
 
 -- Retorna Emprestimos não finalizados
 CREATE VIEW emprestimo_debito AS
-    SELECT emp.idExemplar
+    SELECT emp.idExemplar, emp.data_prev_entrega
     FROM Emprestimo emp
     WHERE emp.status_emprestimo != 'FINALIZADO';
 
@@ -240,7 +240,7 @@ language plpgsql;
 
 -- Gatilho acionado quando um emprestimo é inserido
 CREATE TRIGGER trig_make_emprestimo_ativo
-     BEFORE INSERT ON Emprestimo
+     AFTER INSERT ON Emprestimo
      FOR EACH ROW
      EXECUTE PROCEDURE make_emprestimo_ativo();
 
@@ -289,6 +289,11 @@ $BODY$
 DECLARE 
     var_r record;
 BEGIN
+
+    IF (SELECT COUNT(*) FROM Emprestimo emp WHERE emp.idExemplar = NEW.idExemplar AND emp.status_emprestimo != 'FINALIZADO') > 1 THEN
+        RAISE EXCEPTION 'Este exemplar não está disponível!';
+    END IF;
+
     IF (SELECT COUNT(*) FROM Emprestimo emp WHERE emp.idCliente = NEW.idCliente AND emp.status_emprestimo != 'FINALIZADO') > 3 THEN
         RAISE EXCEPTION 'Limite de emprestimos Excedido!';
     END IF;
@@ -392,7 +397,6 @@ BEGIN
         RAISE EXCEPTION 'idFuncionario % nao existe em Funcionario', idFuncionario_;
     END IF;
 
-    
     INSERT INTO Emprestimo (idExemplar, idCliente, idFuncionario, data_emprestimo)
         VALUES (idExemplar_, idCliente_, idFuncionario_, data_emprestimo_);
 
@@ -406,8 +410,6 @@ BEGIN
     WHERE idCliente = idCliente_ AND
           status_reserva = 'ATIVA' AND
           idLivro IN (SELECT idLivro FROM Exemplar WHERE idExemplar = idExemplar_);
-
-    
 END;
 $$ LANGUAGE plpgsql;
 

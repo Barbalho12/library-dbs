@@ -206,3 +206,11 @@ except Exception as e:
         pass
 
 
+print "----------- Show Requisicao -----------"
+consulta("SELECT * FROM Requisicao", cursor)
+print "----------- Show Localizacao -----------"
+consulta("SELECT * FROM Localizacao", cursor)
+print "----------- Show Endereco -----------"
+consulta("SELECT * FROM Endereco", cursor)
+
+

@@ -153,8 +153,27 @@ BEGIN WORK;
           idLivro IN (SELECT idLivro FROM Exemplar WHERE idExemplar = 10);
 COMMIT WORK;
 
+-- -- Function para emprestimo
+-- select new_emprestimo(10, 1, 1, '19/11/2017');
 
-select new_emprestimo(10, 1, 1, '19/11/2017');
+
+-- Alterar estados de Livros antigos para danificado
+Update Exemplar 
+set estado_fisico = 'DANIFICADO'
+where data_compra < '01/01/2005'::DATE;
 
 
+-- Deleta Requisições em que existem os livros requeridos
+DELETE from Requisicao r
+WHERE r.livro IN (SELECT l.titulo FROM Livro l);
+
+
+-- Deleta Localizações em que não há exemplares
+DELETE from Localizacao l
+WHERE idLocalizacao NOT IN (SELECT e.idLocalizacao FROM Exemplar e);
+
+
+-- Deleta Endereços onde ninguem mora
+DELETE from Endereco e
+WHERE idEndereco NOT IN (SELECT c.idEndereco FROM Cliente c);
 
